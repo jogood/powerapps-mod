@@ -1,14 +1,14 @@
 {
   "manifest_version": 2,
 
-  "name": "Modify CSS and HTML",
+  "name": "Modify CSS and HTML PowerApps",
   "version": "0.1.0",
-  "description": "Lateral blog post demo extension",
+  "description": "PowerApps mod",
 
   "content_scripts": [{
     "css": ["styles.css"],
     "js": ["content.js"],
-    "matches": ["https://blog.lateral.io/*"]
+    "matches": ["https://us.create.powerapps.com/studio/#"]
   }]
 
 }
