@@ -1,4 +1,4 @@
-var b = false;
+var testValue = false;
 var bodyInnerhtml = { body: "" };
 
 document.getElementById("applycss").addEventListener("click", () => {
@@ -33,15 +33,20 @@ document.getElementById("applycss").addEventListener("click", () => {
     }
     // Barre de formule complete
     document.getElementsByTagName("formula-bar")[0].parentElement.parentElement.style.top = "78px";
+
     // Barre de champ texte de formule
     document.getElementsByClassName(
       "formula-bar-rule-container-element"
     )[0].parentElement.style.width = "1050px";
+    document.getElementsByClassName("formula-bar-rule-container-element")[0].parentElement.parentElement.style.width = "1050px";
+    // document.getElementsByClassName("formula-bar-rule-container-element")[0].style.width = "1050px";
 
     // Right side panel
     document.getElementsByClassName("sidebar-container")[0].style.width = "400px";
     document.getElementsByClassName("sidebar-container")[0].style.top = "-48px";
-    document.getElementsByClassName("react-ko-host-container")[0].parentElement.parentElement.style.width = "100%"
+    document.getElementsByClassName(
+      "react-ko-host-container"
+    )[0].parentElement.parentElement.style.width = "100%";
 
     console.log("Css applied");
     // Display body in page's console
@@ -55,44 +60,22 @@ document.getElementById("applycss").addEventListener("click", () => {
       console.log(document.body);
       document.bodyBackup = Object.assign({}, document.body);
       console.log(document.bodyBackup);
-      //   return { body: document.body };
     }
-    // return null;
+
   }
 
   //We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
   chrome.tabs.executeScript(
     {
-      code: "var mod = " + b + ";" + "(" + setBody + ")();(" + modifyDOM + ")();", //argument here is a string but function.toString() returns function's code
+      code: "var mod = " + testValue + ";" + "(" + setBody + ")();(" + modifyDOM + ")();", //argument here is a string but function.toString() returns function's code
     },
     (results) => {
-      //Here we have just the innerHTML and not DOM structure
+
       console.log("Popup script:");
       console.log(results);
-      //   if (results[0] != null) {
-      //     bodyInnerhtml = results[0];
-      //   }
+
     }
   );
-  b = !b;
+  testValue = !testValue;
 });
 
-document.getElementById("reset").addEventListener("click", () => {
-  function resetBody() {
-    if (document.bodyBackup != null) {
-      document.body = document.bodyBackup;
-      console.log("Reseted body html");
-      console.log(document.bodyBackup);
-    }
-  }
-  chrome.tabs.executeScript(
-    {
-      code: "(" + resetBody + ")()", //argument here is a string but function.toString() returns function's code
-    },
-    (results) => {
-      //Here we have just the innerHTML and not DOM structure
-      console.log("Popup script:");
-      console.log(results);
-    }
-  );
-});

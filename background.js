@@ -7,14 +7,15 @@ chrome.runtime.onInstalled.addListener(function () {
   console.log("Google chrome PowerApps style extension initialized");
 });
 
-let matches = ["https://us.create.powerapps.com/studio/#",
-"*://us.create.powerapps.com/studio/#" ]
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+let matches = ["https://us.create.powerapps.com/studio/#", "://us.create.powerapps.com/studio/#"];
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+    setTimeout(function(){
+    chrome.tabs.get(activeInfo.tabId, function(tab) {
     for (let i in matches) {
-        if (tab.url.includes(matches[i])) {
-            chrome.pageAction.show(tabId)
-            break
-        }
+      if (tab.url.indexOf(matches[i]) != -1) {
+        chrome.pageAction.show(activeInfo.tabId);
+        break;
+      }
     }
-})
-
+  });},300);
+});
