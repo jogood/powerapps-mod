@@ -83,33 +83,46 @@ document.getElementById("applycss").addEventListener("click", () => {
       element.requestPointerLock();
       setTimeout(() => {
         if (!didMouseUp) {
-          document.exitPointerLock = document.exitPointerLock;
+          // document.exitPointerLock = document.exitPointerLock;
           document.exitPointerLock();
           console.log("End Lock");
         }
-      }, 1000);
+      }, 150);
     }
     function mouseUpHandler(event) {
-      didMouseUp = true;
       console.log("Mouseup");
-
-      document.exitPointerLock = document.exitPointerLock;
-      document.exitPointerLock();
+      setTimeout(() => {
+        // if (!didMouseUp) {
+        // document.exitPointerLock = document.exitPointerLock;
+        didMouseUp = true;
+        document.exitPointerLock();
+        console.log("End Lock");
+        // }
+      }, 20);
+      // document.exitPointerLock = document.exitPointerLock;
+      // document.exitPointerLock();
     }
-    document.addEventListener(
-      "click",
-      function (event) {
-        didMouseUp = false;
-        console.log("click Lock");
-        console.log(event);
-        console.log(event.srcElement);
-        element = event.srcElement;
-        element.requestPointerLock =
-          element.requestPointerLock || event.srcElement.mozRequestPointerLock;
-        element.requestPointerLock();
-      },
-      { name: "lockClick" }
-    );
+    // document.addEventListener(
+    //   "click",
+    //   function (event) {
+    //     didMouseUp = false;
+    //     console.log("click Lock");
+    //     console.log(event);
+    //     console.log(event.srcElement);
+    //     element = event.srcElement;
+    //     element.requestPointerLock =
+    //       element.requestPointerLock || event.srcElement.mozRequestPointerLock;
+    //     element.requestPointerLock();
+    //     setTimeout(() => {
+    //       // if (!didMouseUp) {
+    //         document.exitPointerLock = document.exitPointerLock;
+    //         document.exitPointerLock();
+    //         console.log("End Lock");
+    //       // }
+    //     }, 50);
+    //   },
+    //   { name: "lockClick" }
+    // );
 
     document.addEventListener("mousedown", lockMouseDown, { name: "lockMouseDown" });
     document.addEventListener("mouseup", mouseUpHandler, { name: "mouseUpHandler" });
