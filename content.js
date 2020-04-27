@@ -1,5 +1,4 @@
 var testValue = false;
-var bodyInnerhtml = { body: "" };
 
 document.getElementById("applycss").addEventListener("click", () => {
   console.log("Popup DOM fully loaded and parsed");
@@ -38,7 +37,9 @@ document.getElementById("applycss").addEventListener("click", () => {
     document.getElementsByClassName(
       "formula-bar-rule-container-element"
     )[0].parentElement.style.width = "1050px";
-    document.getElementsByClassName("formula-bar-rule-container-element")[0].parentElement.parentElement.style.width = "1050px";
+    document.getElementsByClassName(
+      "formula-bar-rule-container-element"
+    )[0].parentElement.parentElement.style.width = "1050px";
     // document.getElementsByClassName("formula-bar-rule-container-element")[0].style.width = "1050px";
 
     // Right side panel
@@ -55,27 +56,73 @@ document.getElementById("applycss").addEventListener("click", () => {
     return document.body.innerHTML;
   }
 
-  function setBody() {
-    if (document.bodyBackup == null) {
-      console.log(document.body);
-      document.bodyBackup = Object.assign({}, document.body);
-      console.log(document.bodyBackup);
+  function LockComponents() {
+    document.removeEventListener("mousedown", lockMouseDown, { name: "lockMouseDown" });
+    document.removeEventListener("mouseup", mouseUpHandler, { name: "mouseUpHandler" });
+    console.log("Lock listener activated");
+    var element = null;
+    var list = [
+      // "click",
+      // "drag",
+      "mousedown",
+      // "mouseup","dragenter",
+
+      // "dragover",
+      // "drop","dragbox"
+    ];
+    var didMouseUp = false;
+
+    function lockMouseDown(event) {
+      didMouseUp = false;
+      console.log("mousedown Lock");
+      console.log(event);
+      console.log(event.srcElement);
+      element = event.srcElement;
+      element.requestPointerLock =
+        element.requestPointerLock || event.srcElement.mozRequestPointerLock;
+      element.requestPointerLock();
+      setTimeout(() => {
+        if (!didMouseUp) {
+          document.exitPointerLock = document.exitPointerLock;
+          document.exitPointerLock();
+          console.log("End Lock");
+        }
+      }, 1000);
     }
+    function mouseUpHandler(event) {
+      didMouseUp = true;
+      console.log("Mouseup");
 
+      document.exitPointerLock = document.exitPointerLock;
+      document.exitPointerLock();
+    }
+    document.addEventListener(
+      "click",
+      function (event) {
+        didMouseUp = false;
+        console.log("click Lock");
+        console.log(event);
+        console.log(event.srcElement);
+        element = event.srcElement;
+        element.requestPointerLock =
+          element.requestPointerLock || event.srcElement.mozRequestPointerLock;
+        element.requestPointerLock();
+      },
+      { name: "lockClick" }
+    );
+
+    document.addEventListener("mousedown", lockMouseDown, { name: "lockMouseDown" });
+    document.addEventListener("mouseup", mouseUpHandler, { name: "mouseUpHandler" });
   }
-
   //We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
   chrome.tabs.executeScript(
     {
-      code: "var mod = " + testValue + ";" + "(" + setBody + ")();(" + modifyDOM + ")();", //argument here is a string but function.toString() returns function's code
+      code: "var mod = " + testValue + ";(" + modifyDOM + ")();(" + LockComponents + ")();", //argument here is a string but function.toString() returns function's code
     },
     (results) => {
-
       console.log("Popup script:");
       console.log(results);
-
     }
   );
   testValue = !testValue;
 });
-
