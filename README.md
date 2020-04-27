@@ -1,4 +1,4 @@
-# PowerApps style mod
+# Better UI for PowerApps Studio
 
 This extension helps making a better workspace for PowerApps developement.
 
